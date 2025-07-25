@@ -125,6 +125,16 @@ app.get('/members', async (req, res) => {
   }
 });
 
+// Public route to get all members (for frontend display)
+app.get('/api/members', async (req, res) => {
+  try {
+    const members = await Member.find();
+    res.json(members);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch members' });
+  }
+});
+
 // Registration endpoint
 app.post('/auth/register', async (req, res) => {
   const schema = Joi.object({
