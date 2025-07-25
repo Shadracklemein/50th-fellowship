@@ -8,5 +8,10 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2"
+  }
 }
