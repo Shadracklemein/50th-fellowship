@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-route
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Members from "./pages/Members";
+import AdminDashboard from "./pages/AdminDashboard";
+import PastorDashboard from "./pages/PastorDashboard";
 
 function App() {
   return (
@@ -10,6 +12,10 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginWithRedirect />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/member-dashboard" element={<Members />} />
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/pastor-dashboard" element={<PastorDashboard />} />
+        {/* Legacy route for backward compatibility */}
         <Route path="/members" element={<Members />} />
       </Routes>
     </Router>
@@ -19,7 +25,7 @@ function App() {
 // Helper to allow redirect after login
 function LoginWithRedirect() {
   const navigate = useNavigate();
-  return <Login onLoginSuccess={() => navigate("/members")} />;
+  return <Login onLoginSuccess={() => navigate("/member-dashboard")} />;
 }
 
 export default App;

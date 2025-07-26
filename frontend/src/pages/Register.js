@@ -13,11 +13,13 @@ import {
   FormHelperText,
   Alert
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
 function Register() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     // Personal Information
     firstName: "",
@@ -122,8 +124,11 @@ function Register() {
 
     setLoading(true);
     setSuccess("");
+    setErrors({});
 
     try {
+      console.log('Starting registration process...');
+      
       // First, register the user account
       const userData = {
         email: formData.email,
@@ -131,7 +136,9 @@ function Register() {
         role: "member"
       };
 
+      console.log('Registering user account...');
       await axios.post(`${API_URL}/auth/register`, userData);
+      console.log('User account registered successfully');
 
       // Then, create the member profile
       const memberData = {
@@ -159,9 +166,13 @@ function Register() {
         howDidYouHear: formData.howDidYouHear
       };
 
+      console.log('Creating member profile...');
       await axios.post(`${API_URL}/members`, memberData);
+      console.log('Member profile created successfully');
 
-      setSuccess("Registration successful! You can now login with your email and password.");
+      setSuccess("Registration successful! Redirecting to login page...");
+      
+      // Clear form data
       setFormData({
         firstName: "", lastName: "", email: "", password: "", confirmPassword: "",
         phone: "", dateOfBirth: "", gender: "", address: "", city: "", state: "",
@@ -170,7 +181,13 @@ function Register() {
         maritalStatus: "", spouseName: "", children: "", howDidYouHear: ""
       });
 
+      // Redirect to login page after 2 seconds
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+
     } catch (err) {
+      console.error('Registration error:', err.response?.data || err.message);
       if (err.response?.data?.error) {
         setErrors({ submit: err.response.data.error });
       } else {

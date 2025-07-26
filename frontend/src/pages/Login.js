@@ -1,24 +1,48 @@
 import React, { useState } from "react";
 import { TextField, Button, Box, Typography, Paper, Link } from "@mui/material";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
 function Login({ onLoginSuccess }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
+    
     try {
       const res = await axios.post(`${API_URL}/auth/login`, { email, password });
-      alert("Login successful!");
+      const { token, role } = res.data;
+      
+      // Store token in localStorage for future API calls
+      localStorage.setItem('token', token);
+      localStorage.setItem('userRole', role);
+      localStorage.setItem('userEmail', email);
+      
+      console.log('Login successful for role:', role);
+      
+      // Redirect based on user role
+      if (role === "admin") {
+        navigate("/admin-dashboard");
+      } else if (role === "pastor") {
+        navigate("/pastor-dashboard");
+      } else {
+        navigate("/member-dashboard");
+      }
+      
       if (onLoginSuccess) onLoginSuccess();
     } catch (err) {
-      setError("Invalid email or password");
+      console.error('Login error:', err.response?.data || err.message);
+      setError(err.response?.data?.error || "Invalid email or password");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -63,9 +87,10 @@ function Login({ onLoginSuccess }) {
             variant="contained"
             color="primary"
             fullWidth
+            disabled={loading}
             sx={{ mt: 2 }}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </Button>
         </form>
         <Box mt={2} textAlign="center">
