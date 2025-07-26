@@ -1,0 +1,28 @@
+services:
+  # Frontend Service
+  - type: web
+    name: 50th-fellowship-frontend
+    env: node
+    plan: free
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm run render-start
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://five0th-fellowship.onrender.com
+
+  # Backend Service (if not already deployed)
+  - type: web
+    name: 50th-fellowship-backend
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: MONGO_URI
+        value: mongodb+srv://SHADRACK:Sirere1234@cluster0.ir2zxut.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      - key: JWT_SECRET
+        value: your_super_secret_key
+      - key: PORT
+        value: 10000 
