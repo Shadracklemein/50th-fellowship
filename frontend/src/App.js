@@ -1,22 +1,25 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Members from './pages/Members';
-import Login from './pages/Login';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Members from "./pages/Members";
 
 function App() {
   return (
     <Router>
-      <nav style={{ padding: '1rem', borderBottom: '1px solid #ccc' }}>
-        <Link to="/members" style={{ marginRight: '1rem' }}>Members</Link>
-        <Link to="/login">Login</Link>
-      </nav>
       <Routes>
+        <Route path="/" element={<LoginWithRedirect />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/members" element={<Members />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Members />} />
       </Routes>
     </Router>
   );
+}
+
+// Helper to allow redirect after login
+function LoginWithRedirect() {
+  const navigate = useNavigate();
+  return <Login onLoginSuccess={() => navigate("/members")} />;
 }
 
 export default App;

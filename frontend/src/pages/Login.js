@@ -1,72 +1,84 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { TextField, Button, Box, Typography, Paper, Link } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
+import axios from "axios";
 
-function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+const API_URL = process.env.REACT_APP_API_URL;
+
+function Login({ onLoginSuccess }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
-    setLoading(true);
+    setError("");
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || 'Login failed');
-      } else {
-        localStorage.setItem('token', data.token);
-        setSuccess('Login successful!');
-        setTimeout(() => {
-          navigate('/members');
-        }, 1000);
-      }
+      const res = await axios.post(`${API_URL}/auth/login`, { email, password });
+      alert("Login successful!");
+      if (onLoginSuccess) onLoginSuccess();
     } catch (err) {
-      setError('Network error');
-    } finally {
-      setLoading(false);
+      setError("Invalid email or password");
     }
   };
 
   return (
-    <div>
-      <h1>Login Page</h1>
-      <form onSubmit={handleSubmit} style={{ maxWidth: 300 }}>
-        <div>
-          <label>Email:</label><br />
-          <input
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      minHeight="100vh"
+      bgcolor="#f5f5f5"
+    >
+      <Paper elevation={3} sx={{ padding: 4, minWidth: 320 }}>
+        <Typography variant="h5" mb={2} align="center">
+          Login
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            label="Email"
             type="email"
+            fullWidth
+            margin="normal"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
-        </div>
-        <div>
-          <label>Password:</label><br />
-          <input
+          <TextField
+            label="Password"
             type="password"
+            fullWidth
+            margin="normal"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
-        </div>
-        <button type="submit" disabled={loading} style={{ marginTop: 10 }}>
-          {loading ? 'Logging in...' : 'Login'}
-        </button>
-        {error && <div style={{ color: 'red', marginTop: 10 }}>{error}</div>}
-        {success && <div style={{ color: 'green', marginTop: 10 }}>{success}</div>}
-      </form>
-    </div>
+          {error && (
+            <Typography color="error" variant="body2" align="center">
+              {error}
+            </Typography>
+          )}
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ mt: 2 }}
+          >
+            Login
+          </Button>
+        </form>
+        <Box mt={2} textAlign="center">
+          <Typography variant="body2">
+            Don't have an account?{" "}
+            <Link component={RouterLink} to="/register" variant="body2">
+              Register here
+            </Link>
+          </Typography>
+        </Box>
+      </Paper>
+    </Box>
   );
 }
 
-export default Login; 
+export default Login;

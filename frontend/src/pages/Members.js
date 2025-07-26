@@ -1,38 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React from "react";
+import { Typography, Box } from "@mui/material";
 
 function Members() {
-  const [members, setMembers] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/api/members`)
-      .then(res => res.json())
-      .then(data => {
-        setMembers(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error('Error fetching members:', err);
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) return <div>Loading members...</div>;
-
   return (
-    <div>
-      <h1>Members Page</h1>
-      <ul>
-        {members.map(member => (
-          <li key={member._id} style={{ marginBottom: '1rem' }}>
-            <strong>{member.name}</strong> <br />
-            Email: {member.email} <br />
-            Phone: {member.phone}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Box p={4}>
+      <Typography variant="h4" gutterBottom>
+        Members
+      </Typography>
+      <Typography>
+        Welcome! This is where you’ll see the list of church members.
+      </Typography>
+    </Box>
   );
 }
 
-export default Members; 
+export default Members;
