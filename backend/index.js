@@ -15,6 +15,7 @@ const jwt = require('jsonwebtoken');
 const User = require('./user.model');
 const cors = require('cors');
 const helmet = require('helmet');
+const PrayerRequest = require('./prayer.model');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -233,6 +234,39 @@ app.get('/members', async (req, res) => {
   try {
     const members = await Member.find();
     res.json(members);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// --- Prayer Requests Endpoints ---
+// Submit a new prayer request
+app.post('/api/prayer-requests', async (req, res) => {
+  const schema = Joi.object({
+    email: Joi.string().email().required(),
+    message: Joi.string().min(3).required(),
+  });
+  const { error } = schema.validate(req.body);
+  if (error) return res.status(400).json({ error: error.details[0].message });
+  try {
+    const prayer = new PrayerRequest({
+      email: req.body.email.trim().toLowerCase(),
+      message: req.body.message,
+    });
+    await prayer.save();
+    res.status(201).json(prayer);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Get all prayer requests for a member (by email)
+app.get('/api/prayer-requests', async (req, res) => {
+  const email = req.query.email;
+  if (!email) return res.status(400).json({ error: 'Email is required' });
+  try {
+    const prayers = await PrayerRequest.find({ email: email.trim().toLowerCase() }).sort({ createdAt: -1 });
+    res.json(prayers);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
