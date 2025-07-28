@@ -10,7 +10,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LoginWithRedirect />} />
+        <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/member-dashboard" element={<Members />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
@@ -20,12 +20,6 @@ function App() {
       </Routes>
     </Router>
   );
-}
-
-// Helper to allow redirect after login
-function LoginWithRedirect() {
-  const navigate = useNavigate();
-  return <Login onLoginSuccess={() => navigate("/member-dashboard")} />;
 }
 
 export default App;
