@@ -22,6 +22,7 @@ import EventIcon from '@mui/icons-material/Event';
 import GroupWorkIcon from '@mui/icons-material/GroupWork';
 import PrayerIcon from '@mui/icons-material/VolunteerActivism';
 import axios from "axios";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const drawerWidth = 220;
 
@@ -106,40 +107,48 @@ function Members() {
     return <Typography>Loading...</Typography>;
   }
 
-  // Sidebar navigation items
+  // Sidebar navigation items (remove profile)
   const navItems = [
-    { key: 'dashboard', label: 'Dashboard', icon: <DashboardIcon /> },
-    { key: 'profile', label: 'My Profile', icon: <PersonIcon /> },
-    { key: 'events', label: 'Church Events', icon: <EventIcon /> },
     { key: 'ministries', label: 'Ministries', icon: <GroupWorkIcon /> },
+    { key: 'events', label: 'Church Events', icon: <EventIcon /> },
     { key: 'prayer', label: 'Prayer Requests', icon: <PrayerIcon /> },
   ];
+
+  // Mocked data for ministries and events (replace with API later)
+  const ministries = [];
+  const events = [];
 
   // Main content for each section
   const renderContent = () => {
     switch (selected) {
-      case 'profile':
+      case 'ministries':
         return (
           <Box>
-            <Typography variant="h5" gutterBottom>My Profile</Typography>
-            <Typography variant="body1" color="text.secondary">View your member profile information.</Typography>
-            <Button variant="contained" sx={{ mt: 2 }} onClick={() => navigate('/member-profile')}>View Profile</Button>
+            <Typography variant="h5" gutterBottom>Ministries</Typography>
+            {ministries.length === 0 ? (
+              <Typography>No ministries available.</Typography>
+            ) : (
+              <ul style={{ paddingLeft: 16 }}>
+                {ministries.map((ministry, idx) => (
+                  <li key={idx}>{ministry.name}</li>
+                ))}
+              </ul>
+            )}
           </Box>
         );
       case 'events':
         return (
           <Box>
             <Typography variant="h5" gutterBottom>Church Events</Typography>
-            <Typography variant="body1" color="text.secondary">View upcoming church events and activities.</Typography>
-            <Button variant="contained" sx={{ mt: 2 }} onClick={() => navigate('/events')}>View Events</Button>
-          </Box>
-        );
-      case 'ministries':
-        return (
-          <Box>
-            <Typography variant="h5" gutterBottom>Ministry Opportunities</Typography>
-            <Typography variant="body1" color="text.secondary">Explore ministry opportunities and volunteer positions.</Typography>
-            <Button variant="contained" sx={{ mt: 2 }} onClick={() => navigate('/ministries')}>View Ministries</Button>
+            {events.length === 0 ? (
+              <Typography>No church events available.</Typography>
+            ) : (
+              <ul style={{ paddingLeft: 16 }}>
+                {events.map((event, idx) => (
+                  <li key={idx}>{event.name}</li>
+                ))}
+              </ul>
+            )}
           </Box>
         );
       case 'prayer':
@@ -179,7 +188,7 @@ function Members() {
                       <li key={prayer._id} style={{ marginBottom: 8 }}>
                         <Typography variant="body2">{prayer.message}</Typography>
                         <Typography variant="caption" color="text.secondary">
-                          {new Date(prayer.createdAt).toLocaleString()}
+                          Status: {prayer.status ? prayer.status : 'pending'} | {new Date(prayer.createdAt).toLocaleString()}
                         </Typography>
                       </li>
                     ))}
@@ -194,9 +203,8 @@ function Members() {
           <Box>
             <Typography variant="h4" gutterBottom>Welcome to the Member Dashboard</Typography>
             <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-              This dashboard is for all members, youth, choir, and praise & worship team. Most items are read-only except those that require your intervention, such as prayer requests.
+              Use the sidebar to navigate through your dashboard features.
             </Typography>
-            <Typography variant="body2">Use the sidebar to navigate through your dashboard features.</Typography>
           </Box>
         );
     }
@@ -210,8 +218,11 @@ function Members() {
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             50th Fellowship Church - Member Dashboard
           </Typography>
-          <Typography variant="body2" sx={{ mr: 2 }}>
-            Welcome, {userInfo.email} ({userInfo.role})
+          <IconButton color="inherit" sx={{ ml: 2 }} aria-label="Profile" title="My Profile" onClick={() => navigate('/member-profile')}>
+            <AccountCircleIcon />
+          </IconButton>
+          <Typography variant="body2" sx={{ ml: 2, mr: 2 }}>
+            {userInfo.email} ({userInfo.role})
           </Typography>
           <IconButton color="inherit" onClick={handleLogout} aria-label="Logout" title="Logout">
             <LogoutIcon />
