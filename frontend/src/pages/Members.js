@@ -52,6 +52,7 @@ function Members() {
           </Typography>
           <Typography variant="body2" sx={{ mr: 2 }}>
             Welcome, {userInfo.email} ({userInfo.role})
+            {/* This dashboard is for all members, youth, choir, and praise & worship team. */}
           </Typography>
           <IconButton color="inherit" onClick={handleLogout}>
             <LogoutIcon />

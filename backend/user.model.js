@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['admin', 'member', 'pastor'],
+    enum: ['admin', 'member', 'pastor', 'youth', 'choir', 'praise_and_worship'],
     default: 'member',
     required: true,
   },

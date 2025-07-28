@@ -34,7 +34,7 @@ function Login({ onLoginSuccess }) {
       } else if (role === "pastor") {
         navigate("/pastor-dashboard");
       } else {
-        navigate("/member-dashboard");
+        navigate("/members");
       }
       
       if (onLoginSuccess) onLoginSuccess();

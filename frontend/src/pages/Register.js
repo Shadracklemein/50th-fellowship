@@ -30,6 +30,8 @@ function Register() {
     phone: "",
     dateOfBirth: "",
     gender: "",
+    // New: Role
+    role: "member",
     
     // Address Information
     address: "",
@@ -84,6 +86,7 @@ function Register() {
     if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
     if (!formData.dateOfBirth) newErrors.dateOfBirth = "Date of birth is required";
     if (!formData.gender) newErrors.gender = "Gender is required";
+    if (!formData.role) newErrors.role = "Role is required";
     if (!formData.address.trim()) newErrors.address = "Address is required";
     if (!formData.city.trim()) newErrors.city = "City is required";
     if (!formData.state.trim()) newErrors.state = "State is required";
@@ -133,7 +136,7 @@ function Register() {
       const userData = {
         email: formData.email,
         password: formData.password,
-        role: "member"
+        role: formData.role || "member"
       };
 
       console.log('Registering user account...');
@@ -175,7 +178,7 @@ function Register() {
       // Clear form data
       setFormData({
         firstName: "", lastName: "", email: "", password: "", confirmPassword: "",
-        phone: "", dateOfBirth: "", gender: "", address: "", city: "", state: "",
+        phone: "", dateOfBirth: "", gender: "", role: "member", address: "", city: "", state: "",
         zipCode: "", country: "", baptismStatus: "", baptismDate: "", previousChurch: "",
         ministryInterests: "", emergencyContact: "", emergencyPhone: "", occupation: "",
         maritalStatus: "", spouseName: "", children: "", howDidYouHear: ""
@@ -310,6 +313,25 @@ function Register() {
                   <MenuItem value="other">Other</MenuItem>
                 </Select>
                 {errors.gender && <FormHelperText>{errors.gender}</FormHelperText>}
+              </FormControl>
+            </Grid>
+            
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth error={!!errors.role}>
+                <InputLabel>Role *</InputLabel>
+                <Select
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  label="Role *"
+                >
+                  <MenuItem value="member">Member</MenuItem>
+                  <MenuItem value="pastor">Pastor</MenuItem>
+                  <MenuItem value="youth">Youth</MenuItem>
+                  <MenuItem value="choir">Choir</MenuItem>
+                  <MenuItem value="praise_and_worship">Praise and Worship</MenuItem>
+                </Select>
+                {errors.role && <FormHelperText>{errors.role}</FormHelperText>}
               </FormControl>
             </Grid>
             
@@ -558,7 +580,7 @@ function Register() {
                 disabled={loading}
                 sx={{ mt: 2 }}
               >
-                {loading ? "Registering..." : "Register as Church Member"}
+                {loading ? "Registering..." : "Register"}
               </Button>
             </Grid>
           </Grid>
