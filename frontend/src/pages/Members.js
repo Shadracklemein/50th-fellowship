@@ -213,7 +213,7 @@ function Members() {
           <Typography variant="body2" sx={{ mr: 2 }}>
             Welcome, {userInfo.email} ({userInfo.role})
           </Typography>
-          <IconButton color="inherit" onClick={handleLogout}>
+          <IconButton color="inherit" onClick={handleLogout} aria-label="Logout" title="Logout">
             <LogoutIcon />
           </IconButton>
         </Toolbar>
@@ -223,7 +223,7 @@ function Members() {
         sx={{
           width: drawerWidth,
           flexShrink: 0,
-          [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+          [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box', WebkitUserSelect: 'none', userSelect: 'none', width: '-webkit-fill-available' },
         }}
       >
         <Toolbar />
@@ -238,7 +238,7 @@ function Members() {
           </List>
           <Divider />
           <List>
-            <ListItem button onClick={handleLogout}>
+            <ListItem button onClick={handleLogout} aria-label="Logout" title="Logout">
               <ListItemIcon><LogoutIcon /></ListItemIcon>
               <ListItemText primary="Logout" />
             </ListItem>
